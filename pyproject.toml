@@ -37,6 +37,7 @@ all = [
 
 [project.scripts]
 lerobot-go2-record = "lerobot_robot_unitree_go2.cli:record_main"
+lerobot-go2-keyboard-record = "lerobot_robot_unitree_go2.keyboard_record:main"
 
 [project.urls]
 Source = "https://github.com/dancher00/lerobot-unitree-go2"

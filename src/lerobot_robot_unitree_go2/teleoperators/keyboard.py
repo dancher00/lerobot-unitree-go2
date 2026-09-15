@@ -64,9 +64,9 @@ class UnitreeGo2KeyboardTeleop(Teleoperator):
     def _on_press(self, key: object) -> None:
         normalised = self._normalise_key(key)
         self._pressed.add(normalised)
-        if normalised == "x":
+        if normalised == self.config.estop_key:
             self._estop_latched = True
-        elif normalised == "r":
+        elif normalised == self.config.reset_key:
             self._estop_latched = False
 
     def _on_release(self, key: object) -> None:
@@ -78,9 +78,15 @@ class UnitreeGo2KeyboardTeleop(Teleoperator):
         space = self._keyboard.Key.space if self._keyboard is not None else object()
         if self._estop_latched or space in keys:
             return {"base.vx": 0.0, "base.vy": 0.0, "base.wz": 0.0}
-        vx = self.config.vx * (float("w" in keys) - float("s" in keys))
-        vy = self.config.vy * (float("a" in keys) - float("d" in keys))
-        wz = self.config.wz * (float("q" in keys) - float("e" in keys))
+        vx = self.config.vx * (
+            float(self.config.forward_key in keys) - float(self.config.backward_key in keys)
+        )
+        vy = self.config.vy * (
+            float(self.config.left_key in keys) - float(self.config.right_key in keys)
+        )
+        wz = self.config.wz * (
+            float(self.config.yaw_left_key in keys) - float(self.config.yaw_right_key in keys)
+        )
         return {"base.vx": vx, "base.vy": vy, "base.wz": wz}
 
     def send_feedback(self, feedback: dict[str, Any]) -> None:

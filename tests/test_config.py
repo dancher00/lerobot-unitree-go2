@@ -32,3 +32,8 @@ def test_teleop_config_validation() -> None:
         UnitreeGo2KeyboardTeleopConfig(vx=0)
     with pytest.raises(ValueError):
         UnitreeGo2GamepadTeleopConfig(deadzone=1.0)
+
+
+def test_keyboard_keys_must_be_unique() -> None:
+    with pytest.raises(ValueError, match="unique single characters"):
+        UnitreeGo2KeyboardTeleopConfig(forward_key="w", backward_key="w")
