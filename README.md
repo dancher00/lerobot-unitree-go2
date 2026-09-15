@@ -22,7 +22,7 @@ frame, body state, the velocity command sent to the robot, and the usual LeRobot
 - Unitree SDK2 `SportClient`
 - Intel RealSense D435i
 - gamepad or keyboard control
-- command limits, watchdog, emergency stop, and zero velocity on exit
+- command limits, watchdog, and zero velocity on exit
 - mock mode for tests and CI
 
 ## Demo
@@ -33,7 +33,7 @@ frame, body state, the velocity command sent to the robot, and the usual LeRobot
 <sub>Go2 EDU walking at 0.30 m/s. D435i frames and commands are recorded at 20 Hz.</sub>
 </div>
 
-Tested on a Go2 EDU with a D435i: stand-up, DDS state, velocity control, safe stop, 640×480 RGB,
+Tested on a Go2 EDU with a D435i: stand-up, DDS state, velocity control, stop on exit, 640×480 RGB,
 and a 190-frame LeRobot Dataset v3 that loads with `LeRobotDataset`.
 
 ## Install
@@ -70,7 +70,7 @@ lerobot-go2-keyboard-record \
 The same command is available as `python examples/record_go2_keyboard.py`. During recording:
 
 ROS keys: `I/,` forward/back · `J/L` turn · `U/O/M/.` arcs · hold Shift to strafe · `K` stop ·
-`X` emergency stop · `V` reset
+`X` lock stop · `V` unlock
 
 The default forward speed is 0.3 m/s. Use `--vx`, `--vy`, and `--wz` to change it. Add
 `--push-to-hub` to upload the dataset after recording.
@@ -88,9 +88,6 @@ task · timestamp · episode_index · frame_index
 lerobot-dataset-viz --repo-id YOUR_NAME/go2_walk --episode-index 0
 hf auth login  # use --dataset.push_to_hub=true to upload while recording
 ```
-
-Before moving the robot, clear the area and keep the Unitree remote stop within reach. Start with
-low velocity limits. This is research software and is not a certified safety system.
 
 <div align="center">
 

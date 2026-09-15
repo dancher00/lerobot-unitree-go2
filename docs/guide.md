@@ -4,9 +4,6 @@ An open-source, ROS-free adapter that makes Unitree Go2 and Go2 EDU usable by Hu
 LeRobot's standard `lerobot-record` workflow. It records synchronized D435i RGB, compact body
 state, base velocity action, task, and standard timestamps directly as a LeRobot Dataset v3.
 
-> **Safety status:** mock mode and Dataset v3 round trips are tested in CI. Real SDK calls follow
-> Unitree SDK2, but hardware behavior must be validated in a clear, controlled area before use.
-
 ## 1. What this project is
 
 The package is a native LeRobot third-party robot and teleoperator plugin. Installation registers:
@@ -135,9 +132,9 @@ python examples/teleop_go2.py --interface eth0 --serial 123456789 --keyboard
 ```
 
 Keyboard controls follow ROS `teleop_twist_keyboard`: `I/,` forward/back, `J/L` yaw,
-`U/O/M/.` arcs, Shift for holonomic strafing, `K` stop, `X` latched emergency stop, and `V` reset.
+`U/O/M/.` arcs, Shift for holonomic strafing, `K` stop, `X` locks stop, and `V` unlocks it.
 Gamepad: left stick forward/lateral, right-stick horizontal yaw, button 1
-(usually B/Circle) latches emergency stop, button 7 (usually Start) resets it. Axes and buttons are
+(usually B/Circle) locks stop, button 7 (usually Start) unlocks it. Axes and buttons are
 configurable.
 
 ## 10. Record the first LeRobot dataset
@@ -154,7 +151,7 @@ lerobot-go2-keyboard-record \
 ```
 
 Controls follow ROS `teleop_twist_keyboard`: `I/,` forward/back, `J/L` yaw, `U/O/M/.` arcs,
-Shift for strafing, `K` stop, `X` emergency stop, and `V` reset. Recording keeps `Q` and `R`.
+Shift for strafing, `K` stop, `X` locks stop, and `V` unlocks it. Recording keeps `Q` and `R`.
 The same entry point is available as `python examples/record_go2_keyboard.py`.
 
 Current LeRobot represents cameras as a native `cameras` mapping. This is the exact standard CLI:
@@ -229,7 +226,7 @@ dataset = LeRobotDataset("username/go2_dataset")
 dataset.push_to_hub()
 ```
 
-## 14. Safety notes
+## 14. Command limits and stopping
 
 - Never test around people, stairs, traffic, glass, or loose cables.
 - Start with low limits and keep a physical/Unitree remote stop available.
@@ -237,7 +234,6 @@ dataset.push_to_hub()
 - Releasing controls produces zero. Exceptions, stale state, disconnect, Ctrl+C cleanup, and the
   independent 0.5 s command watchdog issue stop commands.
 - SDK stop sends both `Move(0, 0, 0)` and `StopMove()` as independent attempts.
-- This software is not a certified safety system.
 
 ## 15. Troubleshooting
 

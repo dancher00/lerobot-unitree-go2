@@ -25,7 +25,7 @@ ACTION_KEYS = ("base.vx", "base.vy", "base.wz")
 
 
 class UnitreeGo2(Robot):
-    """Go2 adapter with velocity clipping, stale-state checks, and fail-safe stop."""
+    """Go2 adapter with velocity clipping, stale-state checks, and stop-on-exit."""
 
     config_class = UnitreeGo2Config
     name = "unitree_go2"
@@ -190,7 +190,7 @@ class UnitreeGo2(Robot):
             try:
                 self.emergency_stop("observation failure")
             except Exception:
-                logger.exception("Emergency stop after observation failure also failed")
+                logger.exception("Stop after observation failure also failed")
             raise
 
         self._last_observation_monotonic = sample_time
@@ -224,7 +224,7 @@ class UnitreeGo2(Robot):
             try:
                 self.emergency_stop("command failure")
             except Exception:
-                logger.exception("Emergency stop after command failure also failed")
+                logger.exception("Stop after command failure also failed")
             raise
         self._raw_logger.write(
             {"type": "action", "monotonic_s": time.monotonic(), "action": dict(sent)}
@@ -232,7 +232,7 @@ class UnitreeGo2(Robot):
         return sent
 
     def disconnect(self) -> None:
-        """Stop first, then release cameras and DDS resources; safe to call repeatedly."""
+        """Stop first, then release cameras and DDS resources; may be called repeatedly."""
         self._watchdog.close()
         try:
             self.backend.stop()

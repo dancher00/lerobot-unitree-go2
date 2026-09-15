@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "lerobot_robot_unitree_go2"
 version = "0.1.0"
-description = "A safe LeRobot Dataset v3 adapter for Unitree Go2 and Go2 EDU"
+description = "A LeRobot Dataset v3 adapter for Unitree Go2 and Go2 EDU"
 readme = "README.md"
 requires-python = ">=3.12"
 license = "Apache-2.0"
