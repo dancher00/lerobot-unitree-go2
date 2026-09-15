@@ -59,34 +59,56 @@ class UnitreeGo2KeyboardTeleop(Teleoperator):
     @staticmethod
     def _normalise_key(key: object) -> object:
         char = getattr(key, "char", None)
-        return char.lower() if isinstance(char, str) else key
+        return char if isinstance(char, str) else key
 
     def _on_press(self, key: object) -> None:
         normalised = self._normalise_key(key)
         self._pressed.add(normalised)
-        if normalised == self.config.estop_key:
+        comparable = normalised.lower() if isinstance(normalised, str) else normalised
+        if comparable == self.config.estop_key.lower():
             self._estop_latched = True
-        elif normalised == self.config.reset_key:
+        elif comparable == self.config.reset_key.lower():
             self._estop_latched = False
 
     def _on_release(self, key: object) -> None:
-        self._pressed.discard(self._normalise_key(key))
+        normalised = self._normalise_key(key)
+        self._pressed.discard(normalised)
+        if isinstance(normalised, str):
+            self._pressed.discard(normalised.lower())
+            self._pressed.discard(normalised.upper())
 
     @check_if_not_connected
     def get_action(self) -> RobotAction:
         keys = self._pressed.copy()
         space = self._keyboard.Key.space if self._keyboard is not None else object()
-        if self._estop_latched or space in keys:
+        stop_pressed = self.config.stop_key in keys or self.config.stop_key.upper() in keys
+        if self._estop_latched or space in keys or stop_pressed:
             return {"base.vx": 0.0, "base.vy": 0.0, "base.wz": 0.0}
-        vx = self.config.vx * (
-            float(self.config.forward_key in keys) - float(self.config.backward_key in keys)
-        )
-        vy = self.config.vy * (
-            float(self.config.left_key in keys) - float(self.config.right_key in keys)
-        )
-        wz = self.config.wz * (
-            float(self.config.yaw_left_key in keys) - float(self.config.yaw_right_key in keys)
-        )
+        direction = [
+            float(self.config.forward_key in keys) - float(self.config.backward_key in keys),
+            float(self.config.left_key in keys) - float(self.config.right_key in keys),
+            float(self.config.yaw_left_key in keys) - float(self.config.yaw_right_key in keys),
+        ]
+        # Canonical teleop_twist_keyboard diagonals and shifted holonomic bindings.
+        ros_bindings = {
+            "u": (1.0, 0.0, 1.0),
+            "o": (1.0, 0.0, -1.0),
+            "m": (-1.0, 0.0, -1.0),
+            ".": (-1.0, 0.0, 1.0),
+            "I": (1.0, 0.0, 0.0),
+            "<": (-1.0, 0.0, 0.0),
+            "U": (1.0, 1.0, 0.0),
+            "O": (1.0, -1.0, 0.0),
+            "M": (-1.0, 1.0, 0.0),
+            ">": (-1.0, -1.0, 0.0),
+        }
+        for key in keys:
+            if key in ros_bindings:
+                for index, value in enumerate(ros_bindings[key]):
+                    direction[index] += value
+        vx = self.config.vx * max(-1.0, min(1.0, direction[0]))
+        vy = self.config.vy * max(-1.0, min(1.0, direction[1]))
+        wz = self.config.wz * max(-1.0, min(1.0, direction[2]))
         return {"base.vx": vx, "base.vy": vy, "base.wz": wz}
 
     def send_feedback(self, feedback: dict[str, Any]) -> None:

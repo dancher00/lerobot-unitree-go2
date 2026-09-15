@@ -69,7 +69,8 @@ lerobot-go2-keyboard-record \
 
 The same command is available as `python examples/record_go2_keyboard.py`. During recording:
 
-`W/S` forward · `A/D` lateral · `J/L` yaw · `Space` stop · `X` emergency stop · `U` reset
+ROS keys: `I/,` forward/back · `J/L` turn · `U/O/M/.` arcs · hold Shift to strafe · `K` stop ·
+`X` emergency stop · `V` reset
 
 The default forward speed is 0.3 m/s. Use `--vx`, `--vy`, and `--wz` to change it. Add
 `--push-to-hub` to upload the dataset after recording.

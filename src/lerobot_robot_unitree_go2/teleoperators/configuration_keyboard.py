@@ -11,14 +11,15 @@ class UnitreeGo2KeyboardTeleopConfig(TeleoperatorConfig):
     vx: float = 0.5
     vy: float = 0.3
     wz: float = 0.8
-    forward_key: str = "w"
-    backward_key: str = "s"
-    left_key: str = "a"
-    right_key: str = "d"
+    forward_key: str = "i"
+    backward_key: str = ","
+    left_key: str = "J"
+    right_key: str = "L"
     yaw_left_key: str = "j"
     yaw_right_key: str = "l"
+    stop_key: str = "k"
     estop_key: str = "x"
-    reset_key: str = "u"
+    reset_key: str = "v"
 
     def __post_init__(self) -> None:
         if self.vx <= 0 or self.vy <= 0 or self.wz <= 0:
@@ -30,6 +31,7 @@ class UnitreeGo2KeyboardTeleopConfig(TeleoperatorConfig):
             self.right_key,
             self.yaw_left_key,
             self.yaw_right_key,
+            self.stop_key,
             self.estop_key,
             self.reset_key,
         ]

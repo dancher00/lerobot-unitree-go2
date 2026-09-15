@@ -28,9 +28,6 @@ def test_keyboard_record_builds_current_lerobot_arguments() -> None:
     )
     assert "--teleop.type=unitree_go2_keyboard" in record_args
     assert "--teleop.vx=0.3" in record_args
-    assert "--teleop.yaw_left_key=j" in record_args
-    assert "--teleop.yaw_right_key=l" in record_args
-    assert "--teleop.reset_key=u" in record_args
     assert "--dataset.single_task=Walk forward" in record_args
     assert "--dataset.num_episodes=2" in record_args
     assert "--dataset.push_to_hub=true" in record_args

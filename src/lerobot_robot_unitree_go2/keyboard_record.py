@@ -48,10 +48,6 @@ def build_record_args(args: argparse.Namespace) -> list[str]:
         f"--teleop.vx={args.vx}",
         f"--teleop.vy={args.vy}",
         f"--teleop.wz={args.wz}",
-        # LeRobot reserves Q and R for recording controls.
-        "--teleop.yaw_left_key=j",
-        "--teleop.yaw_right_key=l",
-        "--teleop.reset_key=u",
         f"--dataset.repo_id={args.repo_id}",
         f"--dataset.single_task={args.task}",
         f"--dataset.fps={args.fps}",
@@ -66,7 +62,7 @@ def build_record_args(args: argparse.Namespace) -> list[str]:
 def main(argv: Sequence[str] | None = None) -> None:
     args = build_parser().parse_args(argv)
     record_args = build_record_args(args)
-    print("Keyboard: W/S forward, A/D lateral, J/L yaw, Space stop, X emergency stop, U reset")
+    print("ROS keys: I/, move, J/L turn, U/O/M/. arcs, Shift for strafe, K stop, X e-stop, V reset")
     print(f"Recording {args.episodes} episode(s) to {args.repo_id}")
 
     original_argv = sys.argv

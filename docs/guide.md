@@ -134,8 +134,9 @@ python examples/teleop_go2.py --interface eth0 --serial 123456789
 python examples/teleop_go2.py --interface eth0 --serial 123456789 --keyboard
 ```
 
-Keyboard controls: `W/S` forward/back, `A/D` lateral, `J/L` yaw, Space stop, `X` latched emergency
-stop, `U` reset the latch. Gamepad: left stick forward/lateral, right-stick horizontal yaw, button 1
+Keyboard controls follow ROS `teleop_twist_keyboard`: `I/,` forward/back, `J/L` yaw,
+`U/O/M/.` arcs, Shift for holonomic strafing, `K` stop, `X` latched emergency stop, and `V` reset.
+Gamepad: left stick forward/lateral, right-stick horizontal yaw, button 1
 (usually B/Circle) latches emergency stop, button 7 (usually Start) resets it. Axes and buttons are
 configurable.
 
@@ -152,8 +153,8 @@ lerobot-go2-keyboard-record \
   --episodes 5
 ```
 
-Controls: `W/S` forward, `A/D` lateral, `J/L` yaw, Space stop, `X` emergency stop,
-and `U` reset after an emergency stop. The recording controls keep `Q` and `R` for LeRobot.
+Controls follow ROS `teleop_twist_keyboard`: `I/,` forward/back, `J/L` yaw, `U/O/M/.` arcs,
+Shift for strafing, `K` stop, `X` emergency stop, and `V` reset. Recording keeps `Q` and `R`.
 The same entry point is available as `python examples/record_go2_keyboard.py`.
 
 Current LeRobot represents cameras as a native `cameras` mapping. This is the exact standard CLI:
