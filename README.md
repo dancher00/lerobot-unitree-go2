@@ -88,10 +88,8 @@ lerobot-dataset-viz --repo-id YOUR_NAME/go2_walk --episode-index 0
 hf auth login  # use --dataset.push_to_hub=true to upload while recording
 ```
 
-## Safety
-
-Clear the area and keep the Unitree remote stop within reach. Start with low velocity limits.
-This is research software and is not a certified safety system.
+Before moving the robot, clear the area and keep the Unitree remote stop within reach. Start with
+low velocity limits. This is research software and is not a certified safety system.
 
 <div align="center">
 
