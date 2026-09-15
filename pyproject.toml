@@ -1,0 +1,62 @@
+[build-system]
+requires = ["setuptools>=71"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lerobot_robot_unitree_go2"
+version = "0.1.0"
+description = "A safe LeRobot Dataset v3 adapter for Unitree Go2 and Go2 EDU"
+readme = "README.md"
+requires-python = ">=3.12"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+authors = [{name = "LeRobot Unitree Go2 contributors"}]
+keywords = ["lerobot", "unitree", "go2", "robotics", "imitation-learning"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+  "lerobot[core_scripts]>=0.6.2,<0.7",
+  "numpy>=1.24",
+]
+
+[project.optional-dependencies]
+unitree = [
+  "unitree_sdk2py @ git+https://github.com/unitreerobotics/unitree_sdk2_python.git@65691c8a8bc53b98d3976dba4dbf9d5d20b2e7f5",
+]
+realsense = ["pyrealsense2>=2.54; platform_system != 'Darwin'", "pyrealsense2-macosx>=2.54; platform_system == 'Darwin'"]
+gamepad = ["pygame>=2.5,<2.7"]
+keyboard = ["pynput>=1.7.8,<1.9"]
+test = ["pytest>=8,<9", "pytest-cov>=5,<7", "ruff>=0.11,<1"]
+all = [
+  "lerobot_robot_unitree_go2[unitree,realsense,gamepad,keyboard]",
+]
+
+[project.scripts]
+lerobot-go2-record = "lerobot_robot_unitree_go2.cli:record_main"
+
+[project.urls]
+Source = "https://github.com/dancher00/lerobot-unitree-go2"
+Issues = "https://github.com/dancher00/lerobot-unitree-go2/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+addopts = "-ra --strict-markers"
+testpaths = ["tests"]
+markers = ["integration: exercises LeRobot Dataset v3 locally"]
+
+[tool.coverage.run]
+source = ["lerobot_robot_unitree_go2"]

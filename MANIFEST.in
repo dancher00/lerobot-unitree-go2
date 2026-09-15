@@ -1,0 +1,6 @@
+include CODE_OF_CONDUCT.md
+include CONTRIBUTING.md
+include LICENSE
+include README.md
+recursive-include examples *.py
+recursive-include .github *.yml
