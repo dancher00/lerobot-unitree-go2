@@ -59,12 +59,12 @@ velocity is zero.
 
 ## Loading
 
-Use the actual Hub dataset ID after publication:
+Load the published dataset from [Hugging Face](https://huggingface.co/datasets/dancher00/go2_object_approach_v1):
 
 ```python
 from lerobot.datasets.lerobot_dataset import LeRobotDataset
 
-dataset = LeRobotDataset("YOUR_ACCOUNT/go2_object_approach_v1", video_backend="pyav")
+dataset = LeRobotDataset("dancher00/go2_object_approach_v1", video_backend="pyav")
 sample = dataset[0]
 print(sample["observation.state"], sample["action"])
 ```

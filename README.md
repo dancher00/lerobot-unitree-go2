@@ -81,8 +81,9 @@ The [SSH bridge and recording guide](docs/go2-so101.md) connects a laptop SO-101
 leader to a follower mounted on Go2. It records front/wrist RGB, 12 state values,
 and 9 action values together at 20 Hz, with a hardware-free mock mode.
 
-See also the [Go2 Object Approach dataset card](docs/go2-object-approach.md)
-for the separate Go2-only collection (202 episodes, 48,889 frames).
+The separate [Go2 Object Approach dataset is available on Hugging Face](https://huggingface.co/datasets/dancher00/go2_object_approach_v1)
+(202 episodes, 48,889 frames). See the [dataset card](docs/go2-object-approach.md)
+for the schema, validation and limitations.
 
 ## Go2-only dataset format
 
