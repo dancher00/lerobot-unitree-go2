@@ -1,110 +1,43 @@
-<div align="center">
-
-<img src="docs/assets/go2-lerobot-hero.png" alt="Unitree Go2 with LeRobot" width="100%">
-
 # LeRobot × Unitree Go2
 
-Open-source adapter for recording Go2 trajectories with Hugging Face LeRobot. No ROS required.
+Record Go2 camera frames, state and velocity commands in LeRobot Dataset v3.
+Keyboard/gamepad teleoperation and an optional SO-101 arm bridge. No ROS required.
 
 [![CI](https://github.com/dancher00/lerobot-unitree-go2/actions/workflows/ci.yml/badge.svg)](https://github.com/dancher00/lerobot-unitree-go2/actions/workflows/ci.yml)
-[![Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-35baf6.svg)](LICENSE)
-[![Python 3.12](https://img.shields.io/badge/python-3.12-44ff9f.svg)](pyproject.toml)
-[![LeRobot Dataset v3](https://img.shields.io/badge/LeRobot-Dataset_v3-ffcc4d.svg)](https://huggingface.co/docs/lerobot)
+[![Dataset](https://img.shields.io/badge/🤗_Dataset-Go2_Object_Approach-yellow)](https://huggingface.co/datasets/dancher00/go2_object_approach_v1)
 
-[Install](#install) · [Record a dataset](#record-a-dataset) · [Full guide](docs/guide.md)
+## Real dataset
 
-</div>
+**[Go2 Object Approach](https://huggingface.co/datasets/dancher00/go2_object_approach_v1)** —
+202 episodes · 48,889 frames · 20 Hz · RGB 640 × 480.
+Task: approach the target object and stop in a manipulation-ready pose.
 
-The adapter connects Unitree SDK2 to the current LeRobot robot API. Each sample contains a D435i
-frame, body state, the velocity command sent to the robot, and the usual LeRobot metadata.
+![Front-camera recording from dataset episode 0](docs/assets/go2-dataset-episode-000.gif)
 
-- Go2 and Go2 EDU
-- Unitree SDK2 `SportClient`
-- Intel RealSense D435i
-- gamepad or keyboard control
-- command limits, watchdog, and zero velocity on exit
-- mock mode for tests and CI
+Episode 0, all 21 seconds shown at 2× speed. Actual recorded camera footage.
 
-## Demo
+One real sample from this episode: **frame 100, t = 5.00 s** (values rounded):
 
-<div align="center">
-<img src="docs/assets/go2-walk-real.gif" alt="Go2 EDU walking while recording D435i and telemetry" width="720">
-<br>
-<sub>Go2 EDU walking at 0.30 m/s. D435i frames and commands are recorded at 20 Hz.</sub>
-</div>
+| Field | Recorded values |
+| --- | --- |
+| `observation.state` | `[-0.0046, -0.2041, 0.0202, -0.0192, -0.0264, 1.3093]` |
+| `action` | `[0.0, -0.3, 0.0]` |
 
-Tested on a Go2 EDU with a D435i: stand-up, DDS state, velocity control, stop on exit, 640×480 RGB,
-and a 190-frame LeRobot Dataset v3 that loads with `LeRobotDataset`.
+State: `[vx, vy, wz, roll, pitch, yaw]`. Action: `[vx, vy, wz]` commands.
+Units: m/s, rad/s, radians. Each sample also includes the front-camera image.
 
-## Install
+```python
+from lerobot.datasets.lerobot_dataset import LeRobotDataset
 
-```bash
-git clone https://github.com/dancher00/lerobot-unitree-go2.git
-cd lerobot-unitree-go2
-python3.12 -m venv .venv
-source .venv/bin/activate
-pip install -e '.[test,unitree,realsense,gamepad,keyboard]'
-pytest -q
+dataset = LeRobotDataset("dancher00/go2_object_approach_v1", video_backend="pyav")
+sample = dataset[100]  # The sample above, including observation.images.front
 ```
 
-Find the camera and check the robot state without moving it:
+## Use it
 
-```bash
-lerobot-find-cameras realsense
-python examples/read_go2_state.py --interface eth0
-```
+- [Install, connect Go2 and record](docs/guide.md)
+- [Go2 + SO-101: SSH bridge, two cameras and joint recording](docs/go2-so101.md)
+- [Dataset schema, validation and limitations](docs/go2-object-approach.md)
 
-See the [full guide](docs/guide.md) for CycloneDDS, networking, and RealSense setup.
-
-## Record a dataset
-
-```bash
-lerobot-go2-keyboard-record \
-  --interface eth0 \
-  --serial YOUR_CAMERA_SERIAL \
-  --repo-id YOUR_NAME/go2_walk \
-  --task 'Walk to the red object' \
-  --episodes 10
-```
-
-The same command is available as `python examples/record_go2_keyboard.py`. During recording:
-
-ROS keys: `I/,` forward/back · `J/L` turn · `U/O/M/.` arcs · hold Shift to strafe · `K` stop ·
-`X` lock stop · `V` unlock
-
-The default forward speed is 0.3 m/s. Use `--vx`, `--vy`, and `--wz` to change it. Add
-`--push-to-hub` to upload the dataset after recording.
-
-## Go2 + SO-101 mobile manipulation
-
-The [SSH bridge and recording guide](docs/go2-so101.md) connects a laptop SO-101
-leader to a follower mounted on Go2. It records front/wrist RGB, 12 state values,
-and 9 action values together at 20 Hz, with a hardware-free mock mode.
-
-The separate [Go2 Object Approach dataset is available on Hugging Face](https://huggingface.co/datasets/dancher00/go2_object_approach_v1)
-(202 episodes, 48,889 frames). See the [dataset card](docs/go2-object-approach.md)
-for the schema, validation and limitations.
-
-## Go2-only dataset format
-
-```text
-observation.images.front   RGB, 640×480
-observation.state          [vx, vy, wz, roll, pitch, yaw]
-action                     [vx, vy, wz]
-task · timestamp · episode_index · frame_index
-```
-
-```bash
-lerobot-dataset-viz --repo-id YOUR_NAME/go2_walk --episode-index 0
-hf auth login  # use --dataset.push_to_hub=true to upload while recording
-```
-
-<div align="center">
-
-[Setup and troubleshooting](docs/guide.md) · [Examples](examples) · [Contributing](CONTRIBUTING.md)
-
-If the project is useful to you, a star helps others find it.
-
-Apache-2.0
-
-</div>
+The published dataset is Go2-only; it contains no arm actions or wrist video.
+Code: [Apache-2.0](LICENSE). Dataset: CC BY 4.0.

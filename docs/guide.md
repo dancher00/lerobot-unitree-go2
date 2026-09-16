@@ -22,7 +22,7 @@ runtime or data path.
 - Linux host with Ethernet recommended
 - SDL-compatible gamepad or keyboard
 
-The current LeRobot source (commit `89236ea`, reporting version 0.6.2) requires Python 3.12+ and is
+The pinned LeRobot source (commit `b6ec006`, reporting version 0.6.2) requires Python 3.12+ and is
 pinned in `pyproject.toml` until that release reaches PyPI. The adapter code intentionally uses no
 syntax newer than Python 3.10, but the effective runtime requirement follows LeRobot.
 
