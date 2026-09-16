@@ -1,0 +1,18 @@
+{
+  "validated_on": "2026-09-16",
+  "dataset": "go2_object_approach_v1",
+  "episodes": 202,
+  "frames": 48889,
+  "fps": 20,
+  "duration_seconds": 2444.45,
+  "video_files": 28,
+  "decoded_video_frames": 48889,
+  "lerobot_decoded_samples": 606,
+  "episode_length_min": 109,
+  "episode_length_max": 502,
+  "action_min": [-0.30000001192092896, -0.30000001192092896, -0.6000000238418579],
+  "action_max": [0.30000001192092896, 0.30000001192092896, 0.6000000238418579],
+  "zero_action_fraction": 0.5255374419603592,
+  "status": "passed",
+  "scope": "Structural validation and video decoding; task success was not annotated or evaluated."
+}

@@ -75,7 +75,16 @@ ROS keys: `I/,` forward/back · `J/L` turn · `U/O/M/.` arcs · hold Shift to st
 The default forward speed is 0.3 m/s. Use `--vx`, `--vy`, and `--wz` to change it. Add
 `--push-to-hub` to upload the dataset after recording.
 
-## Dataset
+## Go2 + SO-101 mobile manipulation
+
+The [SSH bridge and recording guide](docs/go2-so101.md) connects a laptop SO-101
+leader to a follower mounted on Go2. It records front/wrist RGB, 12 state values,
+and 9 action values together at 20 Hz, with a hardware-free mock mode.
+
+See also the [Go2 Object Approach dataset card](docs/go2-object-approach.md)
+for the separate Go2-only collection (202 episodes, 48,889 frames).
+
+## Go2-only dataset format
 
 ```text
 observation.images.front   RGB, 640×480

@@ -1,0 +1,49 @@
+# Paths are relative to the experiment folder, not the shell's working directory.
+network_interface: eth0
+network:
+  host: unitree@YOUR_GO2_IP
+  interface: eth0
+  python: python3
+  pythonpath: /home/unitree/unitree_sdk2_python:/usr/lib/python3/dist-packages:/usr/local/lib/python3.8/dist-packages
+  camera_device: /dev/v4l/by-id/YOUR_FRONT_CAMERA-video-index0
+  jpeg_quality: 90  # SSH transport only; final LeRobot video remains H.264.
+  response_timeout_s: 0.2
+domain_id: 0
+state_topic: rt/sportmodestate
+camera:
+  serial: "YOUR_REALSENSE_SERIAL"  # Detected onboard; not currently USB-local to this laptop.
+  usb_serial: "YOUR_UVC_SERIAL"  # Linux UVC USB serial; differs from the RealSense SDK serial.
+  width: 640
+  height: 480
+  fps: 30
+  color_mode: RGB
+control_frequency: 20
+safety:
+  max_vx: 0.3  # m/s; increased at operator request
+  max_vy: 0.30 # m/s; increased at operator request
+  max_wz: 0.6  # rad/s; increased after operator reported insufficient turning
+  watchdog_timeout_s: 0.25
+  state_timeout_s: 0.25
+  camera_max_age_ms: 200
+  camera_reconnect: false
+dataset:
+  repo_id: local/go2_object_approach_v1
+  root: datasets/go2_only/go2_object_approach_v1
+  format: v3.0
+  episode_seconds: 30
+  reset_seconds: 45
+  countdown_seconds: 5
+  num_episodes: 1
+  push_to_hub: false
+task: "Approach the target object and stop in a manipulation-ready pose."
+schema:
+  observation.images.front: {shape: [480, 640, 3], dtype: uint8, color: RGB}
+  observation.state:
+    names: [vx, vy, wz, roll, pitch, yaw]
+    units: [m/s, m/s, rad/s, rad, rad, rad]
+  action:
+    names: [vx_cmd, vy_cmd, wz_cmd]
+    units: [m/s, m/s, rad/s]
+  task: string
+# Adapter uses base.vx/base.vy/base.wz as the native feature names for commands.
+# Dataset timestamps are frame_index / 20; raw JSONL keeps actual monotonic times.

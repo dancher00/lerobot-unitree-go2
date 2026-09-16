@@ -1,0 +1,23 @@
+# Host ports are on Go2; leader_port is on the laptop. No SDK upgrade required.
+base_config: configs/go2_dataset_collection.yaml
+network:
+  wrist_device: /dev/v4l/by-id/YOUR_WRIST_CAMERA-video-index0
+arm:
+  leader_port: /dev/serial/by-id/YOUR_LEADER
+  follower_port: /dev/serial/by-id/YOUR_FOLLOWER
+  leader_id: go2_leader
+  follower_id: go2_follower
+  max_initial_difference: 30
+control_frequency: 20
+dataset:
+  repo_id: local/go2_so101_mobile_manipulation_v1
+  root: datasets/go2_so101/go2_so101_mobile_manipulation_v1
+  num_episodes: 1
+  episode_seconds: 60
+  reset_seconds: 45
+  countdown_seconds: 5
+task: Approach the target object, stop in a manipulation-ready pose, pick up the cylinder and place it into the cup.
+# state: [vx,vy,wz,roll,pitch,yaw,shoulder_pan,shoulder_lift,elbow_flex,wrist_flex,wrist_roll,gripper]
+# action: [vx_cmd,vy_cmd,wz_cmd,shoulder_pan_goal,shoulder_lift_goal,elbow_flex_goal,wrist_flex_goal,wrist_roll_goal,gripper_goal]
+# Base m/s, rad/s, rad. Arm degrees; gripper calibrated percentage 0..100.
+# Both cameras are RGB 640x480 @ 30; dataset records both at 20 Hz.

@@ -10,4 +10,6 @@ build/
 dist/
 datasets/
 raw_logs/
+logs/
+configs/*.local.yaml
 outputs/
